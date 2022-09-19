@@ -1,5 +1,5 @@
 from urllib.request import Request
-from fastapi import APIRouter, File
+from fastapi import APIRouter,UploadFile
 from app.controller.controller import *
 from app.schemas import *
 
@@ -19,26 +19,34 @@ async def root():
     return {"message": "testing"}
 
 @router.post("/profundidad")
-async def root(maze:Item):
-    maze = read_maze(maze.csv)
-    return {"message": "testing"}
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
+    states_maze,n,m=options_maze(maze)
+    print(maze)
+    result=deepSearch(0,1,states_maze,n,m)
+    return {"message": result}
 
 @router.post("/anchura")
-async def root():
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
     return {"message": "testing"}
 
 @router.post("/profundidad_iterativa")
-async def root():
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
     return {"message": "testing"}
 
 @router.post("/busqueda_uniforme")
-async def root():
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
     return {"message": "testing"}
 
 @router.post("/greedy")
-async def root():
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
     return {"message": "testing"}
 
 @router.post("/a")
-async def root():
+async def root(file: UploadFile):
+    maze = read_maze(file.file)
     return {"message": "testing"}
