@@ -8,11 +8,11 @@ router = APIRouter(
     tags=["Classic"]
 )
 
-@router.middleware("http")
-async def read_maze_before(req:Request,call_next):
-    maze = read_maze(req.maze.csv)
-    response = await call_next(maze)
-    return response
+# @router.middleware("http")
+# async def read_maze_before(req:Request,call_next):
+#     maze = read_maze(req.maze.csv)
+#     response = await call_next(maze)
+#     return response
 
 @router.get("/test")
 async def root():
@@ -20,6 +20,7 @@ async def root():
 
 @router.post("/profundidad")
 async def root(maze:Item):
+    maze = read_maze(maze.csv)
     return {"message": "testing"}
 
 @router.post("/anchura")
