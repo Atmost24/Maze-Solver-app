@@ -30,12 +30,14 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
-    result=deepSearch(0,1,maze,n,m)
+    result,allPath=deepSearch(0,1,maze,n,m)
     print(tracemalloc.get_traced_memory())
     print("--- %s seconds ---" % (time.time() - start_time))
     tracemalloc.stop()
     print(result)
-    return {"message": result}
+    cMaze=convertMaze(maze)
+    print(maze)
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze}
 
 @router.post("/anchura")
 async def root(file: UploadFile):

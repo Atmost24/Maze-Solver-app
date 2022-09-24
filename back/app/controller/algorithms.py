@@ -1,20 +1,40 @@
 ######all algorythms goes here
-
+def pathValues(path):
+    x=0
+    y=1
+    result=[{"x":y,"y":x}]
+    for i in path:
+        if i=="l" :
+            y-=1
+            result.append({"x":y,"y":x})
+        elif i=="u" :
+            x-=1
+            result.append({"x":y,"y":x})
+        elif i=="r":
+            y+=1
+            result.append({"x":y,"y":x})
+        elif i=="d" : 
+            x+=1
+            result.append({"x":y,"y":x}) 
+    return result
 
 #deep-first algorithm
 options=["l","u","r","d"]
 def deepSearch(x,y,maze,n,m):
     result=""
     child=[[x,y]]
+    allPath=[]
     val=["*"]
     while True:
         state=child.pop()
         act_val=val.pop()
+        allPath.append({"x":state[1],"y":state[0]})
         last=act_val[-1]
         x=state[0]
         y=state[1]
         if x==n-1 and y==m-2:
-            result=act_val
+            result=act_val[1:]
+            result=pathValues(result)
             break
         for opt in options:
             if opt=="l" and "r"!=last and y>0 and maze[x][y-1]!="w":
@@ -31,13 +51,14 @@ def deepSearch(x,y,maze,n,m):
                 val.append(act_val+"d")    
                   
     
-    return result
+    return result,allPath
 
 #------- Breadth-first search
 
 def breadthSearch(x,y,maze,n,m):
     result=""
-    
+    allPath=[]
+    allPath.append({"x":state[1],"y":state[0]})
     child=[[x,y]]
     val=["*"]
     while True:
@@ -47,7 +68,8 @@ def breadthSearch(x,y,maze,n,m):
         x=state[0]
         y=state[1]
         if x==n-1 and y==m-2:
-            result=act_val
+            result=act_val[1:]
+            result=pathValues(result)
             break
         for opt in options:
             if opt=="l" and "r"!=last and y>0 and maze[x][y-1]!="w":
@@ -64,10 +86,11 @@ def breadthSearch(x,y,maze,n,m):
                 val.append(act_val+"d")    
         
     
-    return result
+    return result,allPath
 
 #------Depth-limited and iterative
 def limitIterativeSearch(x,y,maze,n,m):
+    allPath=[]
     result=""
     const=4
     limit=const
@@ -76,6 +99,7 @@ def limitIterativeSearch(x,y,maze,n,m):
     val=["*"]
     while True:
         state=child.pop()
+        allPath.append({"x":state[1],"y":state[0]})
         act_val=val.pop()
         last=act_val[-1]
         actual_level=levels.pop()
@@ -84,7 +108,8 @@ def limitIterativeSearch(x,y,maze,n,m):
         x=state[0]
         y=state[1]
         if x==n-1 and y==m-2:
-            result=act_val
+            result=act_val[1:]
+            result=pathValues(result)
             break
 
         pos=0 if act_val==limit else -1
@@ -109,5 +134,5 @@ def limitIterativeSearch(x,y,maze,n,m):
                 levels.insert(pos,actual_level+1) 
         
     
-    return result
+    return result,allPath
 
