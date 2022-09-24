@@ -1,7 +1,9 @@
 import pandas as pd
 
 def read_maze(csv):
-    return pd.read_csv(csv,header=None).dropna().to_numpy()
+    maze=pd.read_csv(csv,header=None).dropna().to_numpy()
+    n,m=maze.shape
+    return maze,n,m
 
 def options_maze(maze):
     options_dict={}
