@@ -46,12 +46,13 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
-    result=breadthSearch(0,1,maze,n,m)
+    result,allPath=breadthSearch(0,1,maze,n,m)
     print(tracemalloc.get_traced_memory())
     print("--- %s seconds ---" % (time.time() - start_time))
     tracemalloc.stop()
     print(result)
-    return {"message": result}
+    cMaze=convertMaze(maze)
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze}
 
 @router.post("/profundidad_iterativa")
 async def root(file: UploadFile):
@@ -60,13 +61,13 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
-    result=limitIterativeSearch(0,1,maze,n,m)
+    result,allPath=limitIterativeSearch(0,1,maze,n,m)
     print(tracemalloc.get_traced_memory())
     print("--- %s seconds ---" % (time.time() - start_time))
     tracemalloc.stop()
     print(result)
-    
-    return {"message": result}
+    cMaze=convertMaze(maze)
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze}
 
 @router.post("/busqueda_uniforme")
 async def root(file: UploadFile):

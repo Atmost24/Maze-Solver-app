@@ -8,6 +8,7 @@ function App() {
 	var url;
 	const [selectedFile, setState] = useState(null);
 	const [option, setOption] = useState("deep");
+	const [response, setResponse] = useState(null);
 
 	const addOption = (val) => {
 		setOption(val.target.value);
@@ -38,6 +39,7 @@ function App() {
 
 		axios.post(url, formData).then((response) => {
 			console.log(response.data);
+			setResponse(response.data);
 		});
 	};
 
@@ -61,7 +63,7 @@ function App() {
 					</option>
 					<option value="A*">A*</option>
 				</select>
-				<Canvas></Canvas>
+				{response != null && <Canvas props={response}></Canvas>}
 			</header>
 		</div>
 	);

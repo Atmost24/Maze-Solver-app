@@ -58,7 +58,7 @@ def deepSearch(x,y,maze,n,m):
 def breadthSearch(x,y,maze,n,m):
     result=""
     allPath=[]
-    allPath.append({"x":state[1],"y":state[0]})
+    
     child=[[x,y]]
     val=["*"]
     while True:
@@ -67,6 +67,7 @@ def breadthSearch(x,y,maze,n,m):
         last=act_val[-1]
         x=state[0]
         y=state[1]
+        allPath.append({"x":state[1],"y":state[0]})
         if x==n-1 and y==m-2:
             result=act_val[1:]
             result=pathValues(result)
