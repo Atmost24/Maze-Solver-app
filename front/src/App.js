@@ -2,19 +2,21 @@ import "./App.css";
 import { useState } from "react";
 import axios from "axios";
 import Canvas from "./Components/Canvas";
-
+import BasicTable from "./Components/BasicTable";
+var statistics=[];
 function App() {
 	const route = "http://127.0.0.1:8000/classic";
 	var url;
 	const [selectedFile, setState] = useState(null);
 	const [option, setOption] = useState("deep");
 	const [response, setResponse] = useState(null);
+	
+	
 
 	const addOption = (val) => {
 		setOption(val.target.value);
 		console.log(val.target.value);
 	};
-
 	const onFileChange = (e) => {
 		setState(e.target.files[0]);
 	};
@@ -39,7 +41,12 @@ function App() {
 
 		axios.post(url, formData).then((response) => {
 			console.log(response.data);
+			statistics.push({"alg":response.data.alg,"shape":response.data.shape,
+							"time":response.data.time,"memory":response.data.memory
+				});
+			console.log(statistics);
 			setResponse(response.data);
+			
 		});
 	};
 
@@ -63,6 +70,8 @@ function App() {
 					</option>
 					<option value="A*">A*</option>
 				</select>
+				<BasicTable rows={statistics}></BasicTable>
+				
 				{response != null && <Canvas props={response}></Canvas>}
 			</header>
 		</div>

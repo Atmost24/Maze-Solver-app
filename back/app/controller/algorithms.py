@@ -93,12 +93,13 @@ def breadthSearch(x,y,maze,n,m):
 def limitIterativeSearch(x,y,maze,n,m):
     allPath=[]
     result=""
-    const=4
+    const=150
     limit=const
     child=[[x,y]]
     levels=[0]
     val=["*"]
     while True:
+        #print(child,levels)
         state=child.pop()
         allPath.append({"x":state[1],"y":state[0]})
         act_val=val.pop()
@@ -113,10 +114,10 @@ def limitIterativeSearch(x,y,maze,n,m):
             result=pathValues(result)
             break
 
-        pos=0 if act_val==limit else -1
+        posFlag=0 if actual_level+1==limit else -1
         for opt in options:
+            pos=len(child) if posFlag==-1 else 0
             if opt=="l" and "r"!=last and y>0 and maze[x][y-1]!="w":
-                
                 child.insert(pos,[x,y-1])
                 val.insert(pos,act_val+"l")
                 levels.insert(pos,actual_level+1)
