@@ -8,6 +8,8 @@ function Canvas(props) {
 	let roadWidth = borderWidth / maze[0].length;
 	let roadHeight = borderWidth / maze.length;
 
+	let reload = useRef(false)
+
 	const renderMaze2 = (canvas, context, mazeArray) => {
 		canvas.width = borderWidth;
 		canvas.height = borderWidth;
@@ -38,6 +40,7 @@ function Canvas(props) {
 		function drawDetailedPath(detailedPath, index) {
 			let item = detailedPath[index];
 			setTimeout(() => {
+				// if()
 				context.beginPath();
 				context.rect(item.x * roadWidth, item.y * roadWidth, roadWidth, roadWidth);
 				context.fillStyle = "red";
@@ -48,13 +51,45 @@ function Canvas(props) {
 			}, 20);
 		}
 	};
-
+	
+	//https://stackoverflow.com/questions/69618671/stop-executing-function-after-data-change-react-useeffect
+	//stop the execution of a function from a useeffect
+	//https://stackoverflow.com/questions/68486331/how-to-stop-a-useeffect-function-with-a-condition
+	//probar haciendo un lock toca esperar hasta que termnine para hacer cambios
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const context = canvas.getContext("2d");
 		renderMaze2(canvas, context, maze);
 		renderPath(canvas, context);
-	}, [renderMaze2]);
+	},);
+
+	// useEffect(() => {
+	// 	const controller = new AbortController();
+	// 	startLoad(controller.signal);
+	// 	return () => {
+	// 		controller.abort();
+	// 	};
+		
+	// },);
+
+	// const startLoad = async (signal) => {
+	// 	const canvas = canvasRef.current;
+	// 	if (signal.aborted) {
+	// 		return;
+	// 	}
+	// 	const context = canvas.getContext("2d");
+	// 	if (signal.aborted) {
+	// 		return;
+	// 	}
+	// 	renderMaze2(canvas, context, maze);
+	// 	if (signal.aborted) {
+	// 		return;
+	// 	}
+	// 	await renderPath(canvas, context);
+	// 	if (signal.aborted) {
+	// 		return;
+	// 	}
+	// };
 
 	return <canvas ref={canvasRef} {...props} height="600px" width="600px" />;
 }
