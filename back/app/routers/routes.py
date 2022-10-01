@@ -41,7 +41,7 @@ async def root(file: UploadFile):
 
     cMaze=convertMaze(maze)
     if n<=10 and m<=10:
-        encoded = base64.b64encode(open("a.png", "rb").read())
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
         return {"pathResult": result,"allPath":allPath,"maze":cMaze,
                 "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
                 "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
@@ -62,7 +62,7 @@ async def root(file: UploadFile):
     tracemalloc.stop()
     cMaze=convertMaze(maze)
     if n<=10 and m<=10:
-        encoded = base64.b64encode(open("a.png", "rb").read())
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
         return {"pathResult": result,"allPath":allPath,"maze":cMaze,
             "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura",
              "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
@@ -87,7 +87,7 @@ async def root(file: UploadFile):
     cMaze=convertMaze(maze)
 
     if n<=10 and m<=10:
-        encoded = base64.b64encode(open("a.png", "rb").read())
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
         return {"pathResult": result,"allPath":allPath,"maze":cMaze,
             "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
             "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}

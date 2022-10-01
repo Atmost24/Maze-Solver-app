@@ -23,7 +23,7 @@ def pathValues(path):
 options=["l","u","r","d"]
 def deepSearch(x,y,maze,n,m):
     graph=True if n<=10 and m<=10 else False
-    count=0
+    
     result=""
     child=[[x,y]]
     allPath=[]
@@ -36,7 +36,10 @@ def deepSearch(x,y,maze,n,m):
         f.attr('node',color='#F9F9F9')
         f.attr('edge',color='#F9F9F9')
         idNum=[0]
+    
     while True:
+   
+        
         count+=1
         state=child.pop()
         act_val=val.pop()
@@ -58,6 +61,7 @@ def deepSearch(x,y,maze,n,m):
             result=pathValues(result)
             break
         for opt in options:
+            
             if opt=="l" and "r"!=last and y>0 and maze[x][y-1]!="w":
                 child.append([x,y-1])
                 val.append(act_val+"l")
@@ -78,7 +82,8 @@ def deepSearch(x,y,maze,n,m):
                 val.append(act_val+"d")   
                 if graph: 
                     idNum.append(lastId)
-    f.render().replace('\\', '/')
+    if graph:
+        f.render().replace('\\', '/')
     return result,allPath
 
 #------- Breadth-first search
@@ -141,7 +146,8 @@ def breadthSearch(x,y,maze,n,m):
                 if graph: 
                     idNum.append(count)   
         
-    f.render().replace('\\', '/')
+    if graph:
+        f.render().replace('\\', '/')
     return result,allPath
 
 #------Depth-limited and iterative
@@ -217,5 +223,6 @@ def limitIterativeSearch(x,y,maze,n,m):
                 if graph:
                     idNum.insert(pos,count)
         
-    f.render().replace('\\', '/')
+    if graph:
+        f.render().replace('\\', '/')
     return result,allPath

@@ -46,6 +46,11 @@ function App() {
 			statistics.push({"alg":response.data.alg,"shape":response.data.shape,
 							"time":response.data.time,"memory":response.data.memory
 				});
+			if (response.data.flag){
+				setImageValue(response.data.filedata)
+			}else {
+				setImageValue(null)
+			}
 			console.log(statistics);
 			setResponse(response.data);
 			
@@ -73,7 +78,7 @@ function App() {
 					<option value="A*">A*</option>
 				</select>
 				<BasicTable rows={statistics}></BasicTable>
-				{/* {response != null && <img style={{maxWidth:"300px",maxHeight:"300px"}} src={imagevalue}></img>} */}
+				{imagevalue != null && <img style={{maxWidth:"1200px",maxHeight:"1200px"}} src={imagevalue}></img>} 
 				{response != null && <Canvas props={response}></Canvas>}
 			</header>
 		</div>
