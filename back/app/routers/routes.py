@@ -2,7 +2,7 @@ from urllib.request import Request
 from fastapi import APIRouter,UploadFile
 from app.controller.controller import *
 from app.schemas import *
-
+import base64
 import tracemalloc
 import time
 
@@ -21,6 +21,7 @@ router = APIRouter(
 
 @router.get("/test")
 async def root():
+    
     return {"message": "testing"}
 
 @router.post("/profundidad")
@@ -39,10 +40,14 @@ async def root(file: UploadFile):
     tracemalloc.stop()
 
     cMaze=convertMaze(maze)
-
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+                "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
+                "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
     print(memory)
     return {"pathResult": result,"allPath":allPath,"maze":cMaze,
-            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad"}
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad","flag":False}
 
 @router.post("/anchura")
 async def root(file: UploadFile):
@@ -55,11 +60,16 @@ async def root(file: UploadFile):
     memory=tracemalloc.get_traced_memory()
     totalTime=time.time() - start_time
     tracemalloc.stop()
-
-
     cMaze=convertMaze(maze)
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura",
+             "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
+
+    
     return {"pathResult": result,"allPath":allPath,"maze":cMaze,
-            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura"}
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura","flag":False}
 
 
 @router.post("/profundidad_iterativa")
@@ -75,8 +85,14 @@ async def root(file: UploadFile):
     tracemalloc.stop()
 
     cMaze=convertMaze(maze)
+
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
+            "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
     return {"pathResult": result,"allPath":allPath,"maze":cMaze,
-            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad iterativa"}
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad iterativa","flag":False}
 
 
 @router.post("/busqueda_uniforme")
@@ -92,8 +108,8 @@ async def root(file: UploadFile):
     totalTime=time.time() - start_time
     tracemalloc.stop()
     
-    
-
+    cMaze=convertMaze(maze)
+   
     return {"pathResult": result,"allPath":allPath,"maze":cMaze,
             "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme"}
 

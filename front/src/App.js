@@ -4,12 +4,14 @@ import axios from "axios";
 import Canvas from "./Components/Canvas";
 import BasicTable from "./Components/BasicTable";
 var statistics=[];
+
 function App() {
 	const route = "http://127.0.0.1:8000/classic";
 	var url;
 	const [selectedFile, setState] = useState(null);
 	const [option, setOption] = useState("deep");
 	const [response, setResponse] = useState(null);
+	const [imagevalue, setImageValue] = useState(null);
 	
 	
 
@@ -71,7 +73,7 @@ function App() {
 					<option value="A*">A*</option>
 				</select>
 				<BasicTable rows={statistics}></BasicTable>
-				
+				{/* {response != null && <img style={{maxWidth:"300px",maxHeight:"300px"}} src={imagevalue}></img>} */}
 				{response != null && <Canvas props={response}></Canvas>}
 			</header>
 		</div>
