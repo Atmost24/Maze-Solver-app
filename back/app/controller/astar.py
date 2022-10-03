@@ -94,7 +94,7 @@ class AStar:
                             if neighbour == self.goal:
                                 self.f.attr('node', shape='doublecircle')
                             self.f.node(f'{neighbour[0]}{neighbour[1]}', f'x:{neighbour[0]}y:{neighbour[1]}' + "\nPeso: \n" + str(f[currCell[0]][currCell[1]]))
-                            self.f.edge(f'{currCell[0]}{currCell[1]}', f'{neighbour[0]}{neighbour[1]}', label=move)
+                            self.ff.edge(f'{currCell[0]}{currCell[1]}', f'{neighbour[0]}{neighbour[1]}', label=move)
                         heappush(openSet, Tup(f[neighbour[0]][neighbour[1]], neighbour))
         if self.graph:
             self.f.render().replace('\\', '/')
