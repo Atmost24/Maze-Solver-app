@@ -1,4 +1,5 @@
 from heapq import heappop, heappush
+import random
 import sys
 from specialTuple import Tup
 from maze_solver import convertMaze
@@ -35,6 +36,7 @@ class Greedy:
         for neighbour in neighbours:
             if self.maze[neighbour[0]][neighbour[1]] == "c":
                 pathNeighbours.append(neighbour)
+        random.shuffle(pathNeighbours)
         return pathNeighbours  
     def getPath(self, cameFrom, current):
         path = [{"x":current[0],"y": current[1]}]
