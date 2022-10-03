@@ -2,9 +2,10 @@ from urllib.request import Request
 from fastapi import APIRouter,UploadFile
 from app.controller.controller import *
 from app.schemas import *
-
+import base64
 import tracemalloc
 import time
+
 
 
 router = APIRouter(
@@ -20,6 +21,7 @@ router = APIRouter(
 
 @router.get("/test")
 async def root():
+    
     return {"message": "testing"}
 
 @router.post("/profundidad")
@@ -30,14 +32,22 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
+
     result,allPath=deepSearch(0,1,maze,n,m)
-    print(tracemalloc.get_traced_memory())
-    print("--- %s seconds ---" % (time.time() - start_time))
+
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
     tracemalloc.stop()
-    print(result)
+
     cMaze=convertMaze(maze)
-    print(maze)
-    return {"pathResult": result,"allPath":allPath,"maze":cMaze}
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+                "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
+                "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
+    print(memory)
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad","flag":False}
 
 @router.post("/anchura")
 async def root(file: UploadFile):
@@ -46,12 +56,21 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
-    result=breadthSearch(0,1,maze,n,m)
-    print(tracemalloc.get_traced_memory())
-    print("--- %s seconds ---" % (time.time() - start_time))
+    result,allPath=breadthSearch(0,1,maze,n,m)
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
     tracemalloc.stop()
-    print(result)
-    return {"message": result}
+    cMaze=convertMaze(maze)
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura",
+             "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
+
+    
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"anchura","flag":False}
+
 
 @router.post("/profundidad_iterativa")
 async def root(file: UploadFile):
@@ -60,25 +79,70 @@ async def root(file: UploadFile):
     #print(maze)
     start_time = time.time()
     tracemalloc.start()
-    result=limitIterativeSearch(0,1,maze,n,m)
-    print(tracemalloc.get_traced_memory())
-    print("--- %s seconds ---" % (time.time() - start_time))
+    result,allPath=limitIterativeSearch(0,1,maze,n,m)
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
     tracemalloc.stop()
-    print(result)
-    
-    return {"message": result}
+
+    cMaze=convertMaze(maze)
+
+    if n<=10 and m<=10:
+        encoded = base64.b64encode(open("a.gv.png", "rb").read())
+        return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme",
+            "filedata": 'data:image/png;base64,{}'.format(encoded.decode()),"flag":True}
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"profundidad iterativa","flag":False}
+
 
 @router.post("/busqueda_uniforme")
 async def root(file: UploadFile):
-    maze = read_maze(file.file)
-    return {"message": "testing"}
+    maze,n,m = read_maze(file.file)
+    #n,m=options_maze(maze)
+    #print(maze)
+    start_time = time.time()
+    tracemalloc.start()
+    uniform=Uniform((0,1),(m-1,n-2),maze)
+    cMaze,allPath,result=uniform.findPath()
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
+    tracemalloc.stop()
+    
+    cMaze=convertMaze(maze)
+   
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Uniforme"}
 
 @router.post("/greedy")
 async def root(file: UploadFile):
-    maze = read_maze(file.file)
-    return {"message": "testing"}
+    maze,n,m = read_maze(file.file)
+    #n,m=options_maze(maze)
+    #print(maze)
+    start_time = time.time()
+    tracemalloc.start()
+    greedy=Greedy((0,1),(m-1,n-2),maze)
+    cMaze,allPath,result=greedy.findPath()
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
+    tracemalloc.stop()
+    
+
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+           "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"Greedy"}
 
 @router.post("/a")
 async def root(file: UploadFile):
-    maze = read_maze(file.file)
-    return {"message": "testing"}
+    maze,n,m = read_maze(file.file)
+    #n,m=options_maze(maze)
+    #print(maze)
+    start_time = time.time()
+    tracemalloc.start()
+    aStar=AStar((0,1),(m-1,n-2),maze)
+    cMaze,allPath,result=aStar.findPath()
+    memory=tracemalloc.get_traced_memory()
+    totalTime=time.time() - start_time
+    tracemalloc.stop()
+    
+
+    return {"pathResult": result,"allPath":allPath,"maze":cMaze,
+            "memory":str(memory[1]/1000)+"KB","time":round(totalTime,6),"shape":f"{n},{m}","alg":"A*"}

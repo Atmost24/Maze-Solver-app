@@ -1,8 +1,8 @@
 from heapq import heappop, heappush
 import random
 import sys
-from specialTuple import Tup
-from maze_solver import convertMaze
+from app.controller.specialTuple import Tup
+from app.controller.maze_solver import convertMaze
 
 class AStar:
     def __init__(self, origin, goal, maze):
@@ -42,10 +42,10 @@ class AStar:
         random.shuffle(pathNeighbours)
         return pathNeighbours  
     def getPath(self, cameFrom, current):
-        path = [{"x":current[0],"y": current[1]}]
+        path = [{"x":current[1],"y": current[0]}]
         while current!= None and cameFrom[current[0]][current[1]] != None:
             current = cameFrom[current[0]][current[1]]
-            path.append({"x":current[0],"y": current[1]})
+            path.append({"x":current[1],"y": current[0]})
         return path[::-1]
     def findPath(self):
         cameFrom = [[ None for col in range(self.width)] for row in range(self.height)]
@@ -54,12 +54,14 @@ class AStar:
         f = [[ sys.maxsize for col in range(self.width)] for row in range(self.height)]
         f[self.origin[0]][self.origin[1]] = self.h((self.origin[0],self.origin[1]))
         openSet = []
+        listAllPaths=[]
         heappush(openSet, Tup(f[self.origin[0]][self.origin[1]], self.origin))
         while len(openSet) > 0:
             currCell = heappop(openSet).getPair()
-            self.allPaths.append(self.getPath(cameFrom, currCell))
+            #self.allPaths.append(self.getPath(cameFrom, currCell))
+            listAllPaths.append({"x":currCell[1],"y": currCell[0]})
             if currCell == self.goal:
-                return convertMaze(self.maze), self.allPaths, self.getPath(cameFrom, currCell)
+                return convertMaze(self.maze), listAllPaths, self.getPath(cameFrom, currCell)
             neighbours = self.calculeNeighborhood(currCell)
             for neighbour in neighbours:
                 preG = g[currCell[0]][currCell[1]] + self.d(currCell, neighbour)

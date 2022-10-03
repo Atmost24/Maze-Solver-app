@@ -2,18 +2,23 @@ import "./App.css";
 import { useState } from "react";
 import axios from "axios";
 import Canvas from "./Components/Canvas";
+import BasicTable from "./Components/BasicTable";
+var statistics=[];
 
 function App() {
 	const route = "http://127.0.0.1:8000/classic";
 	var url;
 	const [selectedFile, setState] = useState(null);
 	const [option, setOption] = useState("deep");
+	const [response, setResponse] = useState(null);
+	const [imagevalue, setImageValue] = useState(null);
+	
+	
 
 	const addOption = (val) => {
 		setOption(val.target.value);
 		console.log(val.target.value);
 	};
-
 	const onFileChange = (e) => {
 		setState(e.target.files[0]);
 	};
@@ -38,6 +43,17 @@ function App() {
 
 		axios.post(url, formData).then((response) => {
 			console.log(response.data);
+			statistics.push({"alg":response.data.alg,"shape":response.data.shape,
+							"time":response.data.time,"memory":response.data.memory
+				});
+			if (response.data.flag){
+				setImageValue(response.data.filedata)
+			}else {
+				setImageValue(null)
+			}
+			console.log(statistics);
+			setResponse(response.data);
+			
 		});
 	};
 
@@ -61,7 +77,9 @@ function App() {
 					</option>
 					<option value="A*">A*</option>
 				</select>
-				<Canvas></Canvas>
+				<BasicTable rows={statistics}></BasicTable>
+				{imagevalue != null && <img style={{maxWidth:"1200px",maxHeight:"1200px"}} src={imagevalue}></img>} 
+				{response != null && <Canvas props={response}></Canvas>}
 			</header>
 		</div>
 	);

@@ -5,7 +5,7 @@ def read_maze(csv):
     n,m=maze.shape
     return maze,n,m
 
-def options_maze(maze):
+""" def options_maze(maze):
     options_dict={}
     n,m=maze.shape
     for i in range(n):
@@ -30,7 +30,8 @@ def options_maze(maze):
             
             
 
-    return options_dict,n,m
+    return options_dict,n,m """
 
 def convertMaze(maze):
     return [list(map(lambda x: 0 if x=="c" else 1,i)) for i in maze]
+
