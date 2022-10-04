@@ -6,10 +6,10 @@ import BasicTable from "./Components/BasicTable";
 var statistics=[];
 var selectedFile = null
 var option = "deep"
-var limitValue = null
+var limitValue = 2//null
 
 function App() {
-	const route = "http://127.0.0.1:80/classic";
+	const route = "http://127.0.0.1:8000/classic";
 	var url;
 	const [response, setResponse] = useState(null);
 	const [imagevalue, setImageValue] = useState(null);
@@ -98,8 +98,9 @@ function App() {
 					
 					</div>
 					<div className="element">
-						{option==="iterative"  && <h5 >Limite de iteración</h5> }
-						{option==="iterative"&& <input onchange={addLimit} value="2" type="number" min="1"></input>}
+						<h5 >Limite de iteración</h5>
+						
+						<input onChange={addLimit} type="number" min="1"></input>
 					</div>
 					
 					
