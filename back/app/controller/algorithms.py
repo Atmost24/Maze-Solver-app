@@ -151,11 +151,11 @@ def breadthSearch(x,y,maze,n,m):
     return result,allPath
 
 #------Depth-limited and iterative
-def limitIterativeSearch(x,y,maze,n,m):
+def limitIterativeSearch(x,y,maze,n,m,l):
     graph=True if n<=10 and m<=10 else False
     allPath=[]
     result=""
-    const=3
+    const=l
     limit=const
     child=[[x,y]]
     levels=[0]

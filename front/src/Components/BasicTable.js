@@ -6,7 +6,7 @@ function BasicTable(props) {
       <thead>
         <tr>
           <th>Algoritmo</th>
-          <th>Tiempo</th>
+          <th>Tiempo (s)</th>
           <th>Memoria</th>
           <th>Dimension Laberinto</th>
         </tr>
