@@ -72,7 +72,8 @@ class AStar:
         openSet = []
         listAllPaths=[]
         heappush(openSet, Tup(f[self.origin[0]][self.origin[1]], self.origin))
-        self.f.node('01', 'Origin')
+        if self.graph:
+            self.f.node('01', 'Origin')
         while len(openSet) > 0:
             currCell = heappop(openSet).getPair()
             #self.allPaths.append(self.getPath(cameFrom, currCell))

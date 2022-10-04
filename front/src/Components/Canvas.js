@@ -2,13 +2,18 @@ import React, { useEffect, useRef } from "react";
 
 function Canvas(props) {
 	const { allPath, maze, pathResult } = props.props;
+	let length = maze.length
+	let timeOut = 0;
+	if ( length <= 10) timeOut = 200
+	else if (length <= 50) timeOut = 25
+	else if (length <= 100) timeOut = 10
+	else if (length <= 200) timeOut = 5
+	else timeOut = 1
 	const canvasRef = useRef(null);
 	let borderWidth = Math.min(window.innerWidth, window.innerHeight);
 	borderWidth = Math.max(borderWidth, 500);
 	let roadWidth = borderWidth / maze[0].length;
 	let roadHeight = borderWidth / maze.length;
-
-	let reload = useRef(false)
 
 	const renderMaze2 = (canvas, context, mazeArray) => {
 		canvas.width = borderWidth;
@@ -30,28 +35,22 @@ function Canvas(props) {
 	const renderPath = (canvas, context) => {
 		let path = pathResult;
 		drawDetailedPath(allPath, 0);
-		path.forEach((position) => {
-			context.beginPath();
-			context.rect(position.x * roadWidth, position.y * roadHeight, roadWidth, roadHeight);
-			context.fillStyle = "blue";
-			context.fill();
-			context.closePath();
-		});
+		
 		function drawDetailedPath(detailedPath, index) {
 			let item = detailedPath[index];
 			setTimeout(() => {
-				// if()
 				context.beginPath();
 				context.rect(item.x * roadWidth, item.y * roadWidth, roadWidth, roadWidth);
-				context.fillStyle = "red";
+				if (path.some((e) => e.x === detailedPath[index].x && e.y === detailedPath[index].y)) {
+					context.fillStyle = "#08D9D6";
+				} else context.fillStyle = "#FF2E63";
 				context.fill();
 				context.closePath();
-
 				if (index + 1 < detailedPath.length) drawDetailedPath(detailedPath, index + 1);
-			}, 20);
+			}, timeOut);
 		}
 	};
-	
+
 	//https://stackoverflow.com/questions/69618671/stop-executing-function-after-data-change-react-useeffect
 	//stop the execution of a function from a useeffect
 	//https://stackoverflow.com/questions/68486331/how-to-stop-a-useeffect-function-with-a-condition
@@ -61,36 +60,13 @@ function Canvas(props) {
 		const context = canvas.getContext("2d");
 		renderMaze2(canvas, context, maze);
 		renderPath(canvas, context);
-	},);
+	});
 
-	// useEffect(() => {
-	// 	const controller = new AbortController();
-	// 	startLoad(controller.signal);
-	// 	return () => {
-	// 		controller.abort();
-	// 	};
-		
-	// },);
-
-	// const startLoad = async (signal) => {
-	// 	const canvas = canvasRef.current;
-	// 	if (signal.aborted) {
-	// 		return;
-	// 	}
-	// 	const context = canvas.getContext("2d");
-	// 	if (signal.aborted) {
-	// 		return;
-	// 	}
-	// 	renderMaze2(canvas, context, maze);
-	// 	if (signal.aborted) {
-	// 		return;
-	// 	}
-	// 	await renderPath(canvas, context);
-	// 	if (signal.aborted) {
-	// 		return;
-	// 	}
-	// };
-
-	return <canvas ref={canvasRef} {...props} height="600px" width="600px" />;
+	return (
+		<div>
+			<h4>Solucion</h4>
+			<canvas ref={canvasRef} {...props} height="600px" width="600px" />
+		</div>
+	);
 }
 export default Canvas;

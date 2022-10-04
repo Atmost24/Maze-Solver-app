@@ -4,30 +4,30 @@ import axios from "axios";
 import Canvas from "./Components/Canvas";
 import BasicTable from "./Components/BasicTable";
 var statistics=[];
+var selectedFile = null
+var option = "deep"
+var limitValue = null
 
 function App() {
-	const route = "http://127.0.0.1:8000/classic";
+	const route = "http://127.0.0.1:80/classic";
 	var url;
-	const [selectedFile, setState] = useState(null);
-	const [option, setOption] = useState("deep");
 	const [response, setResponse] = useState(null);
 	const [imagevalue, setImageValue] = useState(null);
-	const [limitValue, setlimitValue] = useState(2);
 	
-
 	const addOption = (val) => {
-		setOption(val.target.value);
+		option = val.target.value
 		console.log(val.target.value);
 	};
 	const onFileChange = (e) => {
-		setState(e.target.files[0]);
+		selectedFile = e.target.files[0]
 	};
 
 	const addLimit = (e) => {
-		setlimitValue(e.target.value);
+		limitValue = e.target.value
 	};
 
 	const cipher = () => {
+		console.log(">> file:", selectedFile)
 		const formData = new FormData();
 		formData.append("file", selectedFile);
 		var par={}
@@ -45,6 +45,7 @@ function App() {
 		} else {
 			url = route + "/a";
 		}
+		console.log(">> formData:", formData)
 
 		axios.post(url, formData,{ params: par}).then((response) => {
 			console.log(response.data);
@@ -57,7 +58,13 @@ function App() {
 				setImageValue(null)
 			}
 			console.log(statistics);
-			setResponse(response.data);
+
+			setResponse(null)
+
+			setTimeout(() => {
+				setResponse(response.data);
+			}, 20);
+			
 			
 		});
 	};
@@ -100,11 +107,11 @@ function App() {
 				<div className="Boton" onClick={cipher}>Iniciar Busqueda!</div>
 			
 				{response != null && <BasicTable rows={statistics}></BasicTable>}
-				<h4>Solucion</h4>
+				
 				{response != null && <Canvas style={{maxWidth:"800px",maxHeight:"800px"}} props={response}></Canvas>}
 				{imagevalue != null && <h4>Grafo</h4>}
 				{imagevalue != null && <h6>d: ir abajo; u: ir arriba ; l: ir a izquierda; r: ir a derecha </h6>}
-				{imagevalue != null && <img style={{maxWidth:"800px",maxHeight:"1200px"}} src={imagevalue}></img>} 
+				{imagevalue != null && <img style={{maxWidth:"800px",maxHeight:"2000px"}} src={imagevalue}></img>} 
 				
 
 				
